@@ -3,6 +3,7 @@ module to-do-checklist
 go 1.23
 
 require (
+	github.com/confluentinc/confluent-kafka-go v1.9.2
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
 	gorm.io/driver/postgres v1.5.11

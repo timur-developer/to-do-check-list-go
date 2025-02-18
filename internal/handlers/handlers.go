@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"to-do-checklist/internal/database"
+	"to-do-checklist/internal/kafka"
 )
 
 func respondWithError(c echo.Context, status int, text string) error {
@@ -24,7 +25,7 @@ func createResponse(status, task string) map[string]string {
 	}
 }
 
-func GetHandler(c echo.Context, db *gorm.DB) error {
+func GetHandler(c echo.Context, db *gorm.DB, producer *kafka.Producer) error {
 	var tasks []database.Task
 	query := db.Model(database.Task{})
 	searchText := c.QueryParam("searchText")
@@ -47,7 +48,10 @@ func GetHandler(c echo.Context, db *gorm.DB) error {
 	if len(tasks) == 0 {
 		return respondWithError(c, http.StatusNotFound, "There are no any tasks")
 	}
-	
+	msg := "There was GET-Request"
+	if err := producer.Produce(msg, "tasks"); err != nil {
+		return fmt.Errorf("There was error with Kafka Producer")
+	}
 	return respondWithSuccess(c, http.StatusOK, tasks)
 }
 
