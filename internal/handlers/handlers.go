@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"time"
 	"to-do-checklist/internal/database"
 	"to-do-checklist/internal/kafka"
 )
@@ -48,14 +49,14 @@ func GetHandler(c echo.Context, db *gorm.DB, producer *kafka.Producer) error {
 	if len(tasks) == 0 {
 		return respondWithError(c, http.StatusNotFound, "There are no any tasks")
 	}
-	msg := "There was GET-Request"
+	msg := fmt.Sprintf("Request received at %s, method: GET, query: %s", time.Now().Format(time.RFC3339), c.Request().RequestURI)
 	if err := producer.Produce(msg, "tasks"); err != nil {
-		return fmt.Errorf("There was error with Kafka Producer")
+		return fmt.Errorf("There was error with Kafka Producer: %v", err)
 	}
 	return respondWithSuccess(c, http.StatusOK, tasks)
 }
 
-func PostTaskHandler(c echo.Context, db *gorm.DB) error {
+func PostTaskHandler(c echo.Context, db *gorm.DB, producer *kafka.Producer) error {
 	var task database.Task
 	if err := c.Bind(&task); err != nil {
 		return respondWithError(c, http.StatusBadRequest, "Incorrect POST request")
@@ -70,10 +71,15 @@ func PostTaskHandler(c echo.Context, db *gorm.DB) error {
 		return respondWithError(c, http.StatusBadRequest, "Could not add the task")
 	}
 
+	msg := fmt.Sprintf("Request received at %s, method: POST, query: %s", time.Now().Format(time.RFC3339), c.Request().RequestURI)
+	if err := producer.Produce(msg, "tasks"); err != nil {
+		return fmt.Errorf("There was error with Kafka Producer: %v", err)
+	}
+
 	return respondWithSuccess(c, http.StatusOK, createResponse("OK", "Task was added successfully"))
 }
 
-func PatchTaskHandler(c echo.Context, db *gorm.DB) error {
+func PatchTaskHandler(c echo.Context, db *gorm.DB, producer *kafka.Producer) error {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -94,10 +100,15 @@ func PatchTaskHandler(c echo.Context, db *gorm.DB) error {
 		return respondWithError(c, http.StatusInternalServerError, "Could not update the task")
 	}
 
+	msg := fmt.Sprintf("Request received at %s, method: PATCH, query: %s", time.Now().Format(time.RFC3339), c.Request().RequestURI)
+	if err := producer.Produce(msg, "tasks"); err != nil {
+		return fmt.Errorf("There was error with Kafka Producer: %v", err)
+	}
+
 	return respondWithSuccess(c, http.StatusOK, createResponse("OK", "Task was updated successfully"))
 }
 
-func DeleteTaskHandler(c echo.Context, db *gorm.DB) error {
+func DeleteTaskHandler(c echo.Context, db *gorm.DB, producer *kafka.Producer) error {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -113,5 +124,10 @@ func DeleteTaskHandler(c echo.Context, db *gorm.DB) error {
 		return respondWithError(c, http.StatusBadRequest, "Could not delete the message")
 	}
 
+	msg := fmt.Sprintf("Request received at %s, method: DELETE, query: %s", time.Now().Format(time.RFC3339), c.Request().RequestURI)
+	if err := producer.Produce(msg, "tasks"); err != nil {
+		return fmt.Errorf("There was error with Kafka Producer: %v", err)
+	}
+	
 	return respondWithSuccess(c, http.StatusOK, createResponse("OK", "The message was deleted successfully"))
 }

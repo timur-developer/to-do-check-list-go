@@ -23,7 +23,7 @@ func NewProducer(address []string) (*Producer, error) {
 	}
 	p, err := kafka.NewProducer(config)
 	if err != nil {
-		return nil, fmt.Errorf("error with ew producer: %w", err)
+		return nil, fmt.Errorf("error with new producer: %w", err)
 	}
 	return &Producer{producer: p}, nil
 }

@@ -12,12 +12,12 @@ func RegisterRoutes(e *echo.Echo, db *gorm.DB, producer *kafka.Producer) {
 		return handlers.GetHandler(c, db, producer)
 	})
 	e.POST("/create", func(c echo.Context) error {
-		return handlers.PostTaskHandler(c, db)
+		return handlers.PostTaskHandler(c, db, producer)
 	})
 	e.PATCH("/edit/:id", func(c echo.Context) error {
-		return handlers.PatchTaskHandler(c, db)
+		return handlers.PatchTaskHandler(c, db, producer)
 	})
 	e.DELETE("/delete/:id", func(c echo.Context) error {
-		return handlers.DeleteTaskHandler(c, db)
+		return handlers.DeleteTaskHandler(c, db, producer)
 	})
 }
