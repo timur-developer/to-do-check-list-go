@@ -1,15 +1,15 @@
 # ToDoList-Go
 
-**ToDoList-Go** is a robust and scalable to-do list application built with a microservice architecture. It allows users to create, track, delete, and mark tasks as completed. This project demonstrates key concepts of microservices, event-driven architecture, and efficient task management. 🚀
+**ToDoList-Go** is a robust and scalable to-do list application built with a microservice architecture. It allows users to create, track, delete, and mark tasks as completed. This project demonstrates key concepts of microservices, event-driven architecture, and efficient task management.
 
 ## Features
 
 - **API Service**: Handles HTTP requests for task operations (create, retrieve, delete, update).
-- **Database Service**: Manages interactions with a PostgreSQL database, storing task data and managing task statuses. 🗄️
+- **Database Service**: Manages interactions with a PostgreSQL database, storing task data and managing task statuses. 
 - **Optional Kafka Service**: Logs events and task actions for improved observability and tracking.
 - **Docker Compose**: Orchestrates the microservices, making it easy to deploy and scale the application.
 - **Comprehensive Logging**: Logs incoming requests, outgoing responses, and errors for troubleshooting.
-- **Unit and Integration Tests**: Ensures the reliability and correctness of the system. ✔️
+- **Unit and Integration Tests**: Ensures the reliability and correctness of the system. 
 
 ## Architecture
 
@@ -53,16 +53,8 @@ The following API endpoints are available:
 - **POST /create**: Create a new task.
 - **GET /list**: Retrieve a list of all tasks.
 - **DELETE /delete**: Delete a task by its unique ID.
-- **PUT /done**: Mark a task as completed by its unique ID. ✅
+- **PUT /done**: Mark a task as completed by its unique ID. 
 
-## Testing
-
-To run the tests, use the following command:
-
-```bash
-make test
-```
-## Contributing 💡
 
 Contributions are welcome! Feel free to open an issue or submit a pull request if you have any improvements or suggestions for the project.💻
 
