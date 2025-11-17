@@ -1,99 +1,56 @@
-# URL Shortener
+# ToDoList-Go
 
-A secure and scalable URL shortening service with authentication and role-based access control.
+**ToDoList-Go** is a robust and scalable to-do list application built with a microservice architecture. It allows users to create, track, delete, and mark tasks as completed. This project demonstrates key concepts of microservices, event-driven architecture, and efficient task management.
 
 ## Features
 
-- URL shortening with custom aliases
-- User authentication (Basic Auth)
-- Role-based permissions (Anonymous/User/Admin)
-- RESTful API
-- PostgreSQL storage
-- Admin dashboard
+- **API Service**: Handles HTTP requests for task operations (create, retrieve, delete, update).
+- **Database Service**: Manages interactions with a PostgreSQL database, storing task data and managing task statuses. 
+- **Optional Kafka Service**: Logs events and task actions for improved observability and tracking.
+- **Docker Compose**: Orchestrates the microservices, making it easy to deploy and scale the application.
+- **Comprehensive Logging**: Logs incoming requests, outgoing responses, and errors for troubleshooting.
+- **Unit and Integration Tests**: Ensures the reliability and correctness of the system. 
 
-## Tech Stack
+## Architecture
 
-- Go 1.21+
-- PostgreSQL
-- Chi Router
-- Basic Authentication
+The application is built using the following microservices:
 
----
+- **API Service**: Responsible for accepting HTTP requests from the user and interacting with the database service.
+- **Database Service**: Connects to PostgreSQL and handles CRUD operations for tasks.
+- **Kafka Service** (optional): Listens for events from the API service and logs actions in Kafka for event tracking.
 
-## Quick Start
+## Getting Started
 
-### 1. Clone the repository
+To get started with this project locally, follow these steps:
 
-```bash
-git clone <your-repo>
-cd go-url-shortener
-```
+### Prerequisites
 
-### 2. Configure the database
+- Docker and Docker Compose must be installed on your machine.
 
-Set up PostgreSQL connection in `config/local.yaml`
+### Installation
 
-### 3. Run the application
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/timur-developer/to-do-list-go.git
+    ```
 
-```bash
-go run cmd/url-shortener/main.go
-```
+2. Navigate to the project directory:
+    ```bash
+    cd to-do-list-go
+    ```
 
----
+3. Build and run the application using Docker Compose:
+    ```bash
+    docker-compose up --build
+    ```
 
-## API Examples
+4. The services will be up and running, and you can start interacting with the API.
 
-### Create short URL
+## Endpoints
 
-```http
-POST /url
-Content-Type: application/json
+The following API endpoints are available:
 
-{
-  "url": "https://example.com",
-  "alias": "my-link"
-}
-```
-
-### Register user
-
-```http
-POST /register
-Content-Type: application/json
-
-{
-  "username": "user",
-  "password": "pass"
-}
-```
-
-### Redirect to original URL
-
-```http
-GET /my-link
-```
-
----
-
-## Role-Based Access
-
-| Role      | Permissions                               |
-|-----------|-------------------------------------------|
-| Anonymous | Create links, Redirect                    |
-| Users     | Manage own links, View analytics          |
-| Admins    | Manage all links, User management         |
-
----
-
-## Git Setup
-
-If you're setting up this repository for the first time:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: URL shortener with auth"
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-git branch -M main
-git push -u origin main
-```
+- **POST /create**: Create a new task.
+- **GET /list**: Retrieve a list of all tasks.
+- **DELETE /delete**: Delete a task by its unique ID.
+- **PUT /done**: Mark a task as completed by its unique ID. 
